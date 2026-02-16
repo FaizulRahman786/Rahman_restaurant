@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | RAHMAN Restaurant</title>
+    <style>
+        :root {
+            --primary: #ff8243;
+            --primary-dark: #ff6020;
+            --dark: #0d0d25;
+            --muted: #666;
+            --bg: #f6f7fb;
+            --card: #ffffff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at 15% 12%, rgba(255,130,67,0.28), transparent 32%),
+                radial-gradient(circle at 90% 85%, rgba(255,188,0,0.20), transparent 30%),
+                linear-gradient(135deg, #f9f8ff 0%, #f5f6fb 48%, #fff8f4 100%);
+            display: grid;
+            place-items: center;
+            color: var(--dark);
+            padding: 16px;
+        }
+
+        .login-card {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255,255,255,0.88);
+            border: 1px solid rgba(255,130,67,0.2);
+            border-radius: 20px;
+            box-shadow: 0 22px 56px rgba(13,13,37,0.16);
+            backdrop-filter: blur(7px);
+            padding: 28px;
+            text-align: center;
+        }
+
+        .login-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(120deg, rgba(255,130,67,0.08), rgba(255,188,0,0.06));
+            z-index: 0;
+        }
+
+        .login-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+            margin-bottom: 8px;
+            text-shadow: 0 4px 12px rgba(255,130,67,0.18);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 24px;
+        }
+
+        p {
+            margin: 0 0 20px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .auth-form {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .field {
+            margin-bottom: 12px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .field input {
+            width: 100%;
+            min-height: 46px;
+            border: 1px solid #e3e3e8;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 14px;
+            outline: none;
+            background: #fff;
+            box-shadow: inset 2px 2px 6px rgba(13,13,37,0.05);
+        }
+
+        .field input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255,130,67,0.15);
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .forgot-wrap {
+            margin-top: 8px;
+            text-align: right;
+        }
+
+        .forgot-btn {
+            border: none;
+            background: transparent;
+            color: var(--primary-dark);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .forgot-btn:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            min-height: 44px;
+            border: 0;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(145deg, #ff8243, #ffbc00);
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(255,130,67,0.28);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 26px rgba(255,130,67,0.38);
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: var(--dark);
+            border: 1px solid #e9e9f2;
+            box-shadow: 0 6px 14px rgba(13,13,37,0.08);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0 10px;
+            color: #9a9aa7;
+            font-size: 12px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #ececf3;
+        }
+
+        #googleSignInBtn {
+            display: inline-flex;
+            justify-content: center;
+            width: 100%;
+            min-height: 44px;
+            border-radius: 999px;
+            overflow: hidden;
+            border: 1px solid #e7e7ee;
+            background: #fff;
+        }
+
+        .status {
+            margin-top: 14px;
+            min-height: 20px;
+            color: #b22a2a;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .hint {
+            margin-top: 16px;
+            font-size: 12px;
+            color: #7a7a7a;
+            line-height: 1.4;
+            text-align: left;
+            background: #fffaf6;
+            border: 1px solid #ffd9c8;
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .login-card {
+                max-width: 480px;
+                padding: 24px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            p {
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .login-card {
+                padding: 18px;
+                border-radius: 14px;
+                box-shadow: 0 12px 30px rgba(13,13,37,0.12);
+            }
+
+            .brand {
+                font-size: 22px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            p {
+                font-size: 14px;
+                margin-bottom: 16px;
+            }
+
+            .actions {
+                grid-template-columns: 1fr;
+            }
+
+            #googleSignInBtn {
+                min-height: 42px;
+            }
+
+            .hint {
+                font-size: 11px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="login-card">
+        <div class="brand">RAHMAN</div>
+        <h1>Sign in to continue</h1>
+        <p>Enter your email and password, or continue with Google.</p>
+
+        <form id="emailAuthForm" class="auth-form">
+            <div class="field">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter password" required />
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary" type="submit" id="emailLoginBtn">Sign In</button>
+                <button class="btn btn-secondary" type="button" id="emailRegisterBtn">Create Account</button>
+            </div>
+            <div class="forgot-wrap">
+                <button class="forgot-btn" type="button" id="forgotPasswordBtn">Forgot password?</button>
+            </div>
+        </form>
+
+        <div class="divider">or</div>
+
+        <div id="googleSignInBtn"></div>
+        <div id="status" class="status" aria-live="polite"></div>
+
+        <div class="hint">
+            Use email/password or continue with Google sign-in.
+        </div>
+    </main>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="login.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 384">
+  <rect width="384" height="384" rx="60" fill="#FF8243"/>
+  <path d="M48 108h288v168H48z" fill="#fff"/>
+  <path d="M48 108l168 98 168-98" fill="none" stroke="#FF8243" stroke-width="12"/>
+  <text x="192" y="276" font-size="30" font-family="Arial" fill="#fff" text-anchor="middle">@</text>
+</svg>

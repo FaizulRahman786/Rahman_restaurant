@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Street Food vs Restaurant Quality | RAHMAN</title>
+    <style>
+      :root { --primary: #ff8243; --dark: #0d0d25; --text: #444; }
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: Arial, sans-serif; color: var(--text); background: #f7f8fc; }
+      .article-wrap { max-width: 980px; margin: 40px auto; background: #fff; border-radius: 16px; box-shadow: 0 16px 40px rgba(13, 13, 37, 0.12); overflow: hidden; }
+      .hero { padding: 28px 26px 10px; }
+      .hero h1 { margin: 0 0 8px; color: var(--dark); font-size: clamp(28px, 4vw, 42px); }
+      .hero p { margin: 0; color: #666; }
+      .cover { width: 100%; height: min(420px, 52vw); object-fit: cover; display: block; }
+      .content { padding: 26px; line-height: 1.8; font-size: 16px; }
+      .content h2 { color: var(--dark); margin: 18px 0 8px; }
+      .content p { margin: 0 0 14px; }
+      .note { margin-top: 24px; padding: 14px; border-left: 4px solid var(--primary); background: #fff4ed; border-radius: 8px; }
+      .top-actions { max-width: 980px; margin: 20px auto 0; padding: 0 8px; }
+      .home-btn { display: inline-block; position: fixed; right: 20px; bottom: 20px; z-index: 999; background: var(--primary); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: #fff; text-decoration: none; font-weight: 700; padding: 10px 16px; border-radius: 8px; box-shadow: 0 6px 16px rgba(13, 13, 37, 0.2); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+      .home-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(13, 13, 37, 0.24); }
+      @media (max-width: 768px) {
+        .home-btn { right: 12px; bottom: 12px; padding: 8px 12px; font-size: 13px; background: rgba(255, 130, 67, 0.8); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top-actions">
+      <a class="home-btn" href="index-scroll.html">Back to Home</a>
+    </div>
+    <article class="article-wrap">
+      <header class="hero">
+        <h1>Street Food vs Restaurant Quality</h1>
+        <p>Comparing authenticity, consistency, hygiene, and ingredient control</p>
+      </header>
+      <img src="assets/images/blog/blog5.jpg" alt="Street food and restaurant dishes" class="cover" />
+      <section class="content">
+        <h2>Flavor and Authenticity</h2>
+        <p>Street food often delivers bold, immediate flavors. Restaurant kitchens focus on consistency and balanced execution at scale.</p>
+        <h2>Ingredient Quality</h2>
+        <p>Restaurants can standardize sourcing and storage protocols, improving predictability in taste and food safety.</p>
+        <h2>Hygiene and Process</h2>
+        <p>Professional kitchens follow structured cleaning, prep, and temperature controls that reduce risk and improve reliability.</p>
+        <h2>Experience and Presentation</h2>
+        <p>Street food celebrates speed and local identity; restaurants offer ambience, service, and curated plating.</p>
+        <div class="note">Tip: The best dining experience often combines street-style flavor with restaurant-level quality control.</div>
+      </section>
+    </article>
+    <script src="assets/js/image-fallback.js"></script>
+  </body>
+</html>

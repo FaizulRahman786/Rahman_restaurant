@@ -1,0 +1,1703 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RAHMAN - Restaurant Website</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="scroll-style.css" />
+
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVJkEZSMUkrQ6usKhaAa3FF8ztTyZeVDycmtkxcElYcphd+S5+dwUlQnwnqQf3dg2TrqNwpyJw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- Bootstrap CDN -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <style>
+      @media (max-width: 768px) {
+        #profilePanel {
+          width: calc(100vw - 24px);
+          left: 12px;
+          right: 12px;
+          top: 74px;
+        }
+      }
+
+      #profilePanel {
+        position: fixed;
+        top: 84px;
+        left: 24px;
+        width: min(420px, calc(100vw - 48px));
+        max-height: calc(100vh - 110px);
+        overflow: auto;
+        z-index: 3000;
+        background: #ffffff;
+        border: 1px solid rgba(13, 13, 37, 0.1);
+        border-radius: 16px;
+        box-shadow: 0 18px 45px rgba(13, 13, 37, 0.16);
+        padding: 16px;
+        display: none;
+      }
+
+      #profilePanel.show {
+        display: block;
+      }
+
+      .profile-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .profile-title {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 700;
+        color: #0d0d25;
+      }
+
+      .profile-muted {
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      .profile-close {
+        border: none;
+        background: transparent;
+        font-size: 22px;
+        line-height: 1;
+        color: #0d0d25;
+        cursor: pointer;
+      }
+
+      .profile-block {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(13, 13, 37, 0.08);
+      }
+
+      .profile-block h6 {
+        margin: 0 0 8px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #0d0d25;
+      }
+
+      .profile-list {
+        margin: 0;
+        padding-left: 16px;
+        display: grid;
+        gap: 6px;
+        color: #374151;
+        font-size: 13px;
+      }
+
+      .profile-quote {
+        margin: 0;
+        padding: 10px;
+        border-radius: 10px;
+        background: #fff7f2;
+        color: #7c2d12;
+        font-size: 13px;
+      }
+
+      .logout-small {
+        border: 1px solid rgba(13, 13, 37, 0.15);
+        background: #ffffff;
+        color: #0d0d25;
+        border-radius: 999px;
+        font-size: 12px;
+        padding: 6px 12px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+    </style>
+
+    <script>
+      (function () {
+        var AUTH_STORAGE_KEY = "rahman_auth_session";
+        var LEGACY_STORAGE_KEY = "rahman_google_user";
+        var LOGIN_PAGE = "login.html";
+
+        try {
+          var raw = localStorage.getItem(AUTH_STORAGE_KEY);
+          var session = null;
+
+          if (raw) {
+            session = JSON.parse(raw);
+          } else {
+            var legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
+            if (legacyRaw) {
+              session = JSON.parse(legacyRaw);
+            }
+          }
+
+          var now = Math.floor(Date.now() / 1000);
+
+          if (!session || !session.exp || session.exp <= now) {
+            localStorage.removeItem(AUTH_STORAGE_KEY);
+            localStorage.removeItem(LEGACY_STORAGE_KEY);
+            window.location.replace(LOGIN_PAGE);
+          }
+        } catch (e) {
+          localStorage.removeItem(AUTH_STORAGE_KEY);
+          localStorage.removeItem(LEGACY_STORAGE_KEY);
+          window.location.replace(LOGIN_PAGE);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- Fullscreen Animated Name Background -->
+    <div class="rahman-bg">
+      <span class="rahman-bg-text">RAHMAN</span>
+    </div>
+    <!-- ============================================
+     HEADER / NAVBAR
+     ============================================ -->
+    <header class="site-header">
+      <div class="container">
+        <div class="row align-items-center justify-content-between">
+          <!-- Text Logo / Account Name -->
+          <div class="col-auto">
+            <div class="header-left">
+              <div class="header-logo">
+                <a href="#home" class="brand-wordmark" aria-label="Go to home">RAHMAN</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Header Right Items -->
+          <div class="col-auto">
+            <div class="header-right">
+              <div class="dropdown">
+                <button
+                  class="header-btn theme-switcher-btn dropdown-toggle"
+                  type="button"
+                  id="themeSwitcherBtn"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  title="Switch Theme"
+                >
+                  <i class="fas fa-palette"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end theme-dropdown" aria-labelledby="themeSwitcherBtn">
+                  <li>
+                    <button class="dropdown-item theme-option" type="button" data-theme="theme-3">
+                      <span class="theme-option-label"><span class="theme-dot theme-dot-3" aria-hidden="true"></span>Theme 3 - PG Dark Amber</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button class="dropdown-item theme-option" type="button" data-theme="theme-4">
+                      <span class="theme-option-label"><span class="theme-dot theme-dot-4" aria-hidden="true"></span>Theme 4 - Tropical Fusion</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <button id="accountTrigger" class="profile-toggle" type="button" aria-label="Open profile details">
+                <span id="accountInitials" class="account-initials" aria-label="Account initials">RR</span>
+              </button>
+              <button class="header-btn header-cart" title="Cart" id="cartHeaderBtn" type="button" data-bs-toggle="modal" data-bs-target="#cartOverviewModal">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-number">0</span>
+              </button>
+              <button class="header-btn header-favorite" title="Favorites" id="favoriteHeaderBtn" type="button" data-bs-toggle="modal" data-bs-target="#favoritesModal">
+                <i class="fas fa-heart"></i>
+                <span class="favorite-number" id="favoriteCount">0</span>
+              </button>
+              <div class="header-search-form">
+                <input id="headerMenuSearchInput" type="search" class="form-input" placeholder="Search menu..." aria-label="Search menu" />
+                <button id="headerMenuSearchBtn" type="button" aria-label="Search menu"><i class="fas fa-search"></i></button>
+              </div>
+              <nav class="main-navigation">
+                <ul class="menu">
+                  <li><a href="#about">About</a></li>
+                  <li><a href="#menu">Menu</a></li>
+                  <li><a href="#gallery">Gallery</a></li>
+                  <li><a href="#blog">Blog</a></li>
+                  <li><a href="#contact">Contact</a></li>
+                </ul>
+              </nav>
+              <button class="menu-toggle" aria-label="Open menu">
+                <span></span>
+                <span></span>
+                <span></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Scroll Container -->
+    <div class="scroll-sections">
+      <!-- ============================================
+         HOME SECTION
+         ============================================ -->
+      <section id="home" class="scroll-section home">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-6">
+              <div data-animate="fade-up">
+                <h1>
+                  Welcome to
+                  <span class="theme-primary-text">RAHMAN Restaurant</span>
+                </h1>
+                <p>
+                  Experience authentic flavors and exquisite culinary delights
+                  at our restaurant. From traditional recipes to modern fusion
+                  dishes, we bring you the best dining experience.
+                </p>
+                <div class="hero-actions" style="margin-top: 30px">
+                  <a href="#menu" class="btn btn-primary">Explore Menu</a>
+                  <button type="button" id="heroReserveBtn" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#reservationModal">Reserve Table</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div data-animate="slide-right">
+                <img
+                  src="assets/images/hero-banner.jpg"
+                  alt="Hero Banner"
+                  class="hero-image"
+                  style="
+                    width: 100%;
+                    border-radius: 20px;
+                    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+                  "
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================
+         ABOUT SECTION
+         ============================================ -->
+      <section id="about" class="scroll-section about">
+        <div class="container">
+          <div class="text-center" style="margin-bottom: 50px">
+            <h2 data-animate="fade-up">About Us</h2>
+            <p
+              data-animate="fade-up"
+              style="max-width: 600px; margin: 20px auto; color: #666"
+            >
+              RAHMAN is a premium restaurant offering a blend of traditional and
+              contemporary cuisine prepared by our expert chefs with the finest
+              ingredients.
+            </p>
+          </div>
+
+          <div class="row">
+            <div class="col-3" data-animate="fade-up">
+              <div style="text-align: center">
+                <div
+                  style="font-size: 50px; color: #ff8243; margin-bottom: 20px"
+                >
+                  <i class="fas fa-leaf"></i>
+                </div>
+                <h3>Fresh Ingredients</h3>
+                <p>
+                  We source only the freshest ingredients from local suppliers
+                  to ensure quality in every dish.
+                </p>
+              </div>
+            </div>
+            <div class="col-3" data-animate="fade-up">
+              <div style="text-align: center">
+                <div
+                  style="font-size: 50px; color: #ff8243; margin-bottom: 20px"
+                >
+                  <i class="fas fa-chef-hat"></i>
+                </div>
+                <h3>Expert Chefs</h3>
+                <p>
+                  Our culinary team brings decades of experience and passion to
+                  create unforgettable dining moments.
+                </p>
+              </div>
+            </div>
+            <div class="col-3" data-animate="fade-up">
+              <div style="text-align: center">
+                <div
+                  style="font-size: 50px; color: #ff8243; margin-bottom: 20px"
+                >
+                  <i class="fas fa-star"></i>
+                </div>
+                <h3>Premium Quality</h3>
+                <p>
+                  Every dish is crafted with precision and care to deliver an
+                  exceptional culinary experience.
+                </p>
+              </div>
+            </div>
+
+            <div class="col-3" data-animate="fade-up">
+              <div
+                class="about-website-card"
+                style="
+                  text-align: left;
+                  height: 100%;
+                "
+              >
+                <h3 style="margin-bottom: 10px; font-size: 22px">
+                  About This Website
+                </h3>
+                <p
+                  style="
+                    color: #555;
+                    margin-bottom: 0;
+                    line-height: 1.6;
+                    font-size: 14px;
+                  "
+                >
+                  RAHMAN is a premium restaurant offering a blend of traditional and contemporary cuisine prepared by our expert chefs with the finest ingredients.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================
+         MENU SECTION
+         ============================================ -->
+      <section id="menu" class="scroll-section menu">
+        <div class="container">
+          <div class="text-center" style="margin-bottom: 50px">
+            <h2 data-animate="fade-up">Our Menu</h2>
+            <p
+              data-animate="fade-up"
+              style="max-width: 600px; margin: 20px auto; color: #666"
+            >
+              Discover our diverse selection of delicious dishes crafted with
+              passion and expertise.
+            </p>
+          </div>
+
+          <!-- Filter Buttons -->
+          <div style="text-align: center; margin-bottom: 40px">
+            <button
+              class="filter-btn active"
+              data-filter="all"
+              style="
+                margin: 5px;
+                padding: 10px 20px;
+                border: 2px solid #ff8243;
+                background: #ff8243;
+                color: white;
+                border-radius: 25px;
+                cursor: pointer;
+              "
+            >
+              All
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="veg"
+              style="
+                margin: 5px;
+                padding: 10px 20px;
+                border: 2px solid #16a34a;
+                background: white;
+                color: #16a34a;
+                border-radius: 25px;
+                cursor: pointer;
+              "
+            >
+              Veg
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="non-veg"
+              style="
+                margin: 5px;
+                padding: 10px 20px;
+                border: 2px solid #dc2626;
+                background: white;
+                color: #dc2626;
+                border-radius: 25px;
+                cursor: pointer;
+              "
+            >
+              Non-Veg
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="appetizer"
+              style="
+                margin: 5px;
+                padding: 10px 20px;
+                border: 2px solid #ff8243;
+                background: white;
+                color: #ff8243;
+                border-radius: 25px;
+                cursor: pointer;
+              "
+            >
+              Appetizers
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="main"
+              style="
+                margin: 5px;
+                padding: 10px 20px;
+                border: 2px solid #ff8243;
+                background: white;
+                color: #ff8243;
+                border-radius: 25px;
+                cursor: pointer;
+              "
+            >
+              Main Course
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="dessert"
+              style="
+                margin: 5px;
+                padding: 10px 20px;
+                border: 2px solid #ff8243;
+                background: white;
+                color: #ff8243;
+                border-radius: 25px;
+                cursor: pointer;
+              "
+            >
+              Desserts
+            </button>
+            <button
+              class="filter-btn"
+              data-filter="beverage"
+              style="
+                margin: 5px;
+                padding: 10px 20px;
+                border: 2px solid #ff8243;
+                background: white;
+                color: #ff8243;
+                border-radius: 25px;
+                cursor: pointer;
+              "
+            >
+              Beverages
+            </button>
+          </div>
+
+          <!-- Menu Items Grid -->
+          <div class="row" id="menuItemsRow" aria-live="polite"></div>
+          <div id="menuEmptyState" class="menu-empty-state" hidden>Not available</div>
+        </div>
+      </section>
+
+      <!-- ============================================
+         GALLERY SECTION
+         ============================================ -->
+      <section id="gallery" class="scroll-section gallery">
+        <div class="container">
+          <div class="text-center" style="margin-bottom: 50px">
+            <h2 data-animate="fade-up">Gallery</h2>
+            <p
+              data-animate="fade-up"
+              style="max-width: 600px; margin: 20px auto; color: #666"
+            >
+              Explore our restaurant ambiance, interiors, and hospitality moments.
+            </p>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4 col-md-6 gallery-item" data-animate="fade-up">
+              <div
+                style="
+                  height: 250px;
+                  background: linear-gradient(135deg, #ff8243, #ffbc00);
+                  border-radius: 15px;
+                  overflow: hidden;
+                  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <img
+                  src="https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg"
+                  alt="Restaurant Interior"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                  loading="lazy"
+                />
+              </div>
+              <p style="margin-top: 10px; color: #666; text-align: center">
+                Elegant interior ambience
+              </p>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-animate="fade-up">
+              <div
+                style="
+                  height: 250px;
+                  background: linear-gradient(135deg, #ff8243, #ffbc00);
+                  border-radius: 15px;
+                  overflow: hidden;
+                  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <img
+                  src="https://images.pexels.com/photos/67468/pexels-photo-67468.jpeg"
+                  alt="Dining Hall Lighting"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                  loading="lazy"
+                />
+              </div>
+              <p style="margin-top: 10px; color: #666; text-align: center">
+                Warm dining hall atmosphere
+              </p>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-animate="fade-up">
+              <div
+                style="
+                  height: 250px;
+                  background: linear-gradient(135deg, #ff8243, #ffbc00);
+                  border-radius: 15px;
+                  overflow: hidden;
+                  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <img
+                  src="https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg"
+                  alt="Restaurant Table Setup"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                  loading="lazy"
+                />
+              </div>
+              <p style="margin-top: 10px; color: #666; text-align: center">
+                Premium table arrangement
+              </p>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-animate="fade-up">
+              <div
+                style="
+                  height: 250px;
+                  background: linear-gradient(135deg, #ff8243, #ffbc00);
+                  border-radius: 15px;
+                  overflow: hidden;
+                  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <img
+                  src="https://images.pexels.com/photos/696218/pexels-photo-696218.jpeg"
+                  alt="Dining Experience"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                  loading="lazy"
+                />
+              </div>
+              <p style="margin-top: 10px; color: #666; text-align: center">
+                Premium dining experience
+              </p>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-animate="fade-up">
+              <div
+                style="
+                  height: 250px;
+                  background: linear-gradient(135deg, #ff8243, #ffbc00);
+                  border-radius: 15px;
+                  overflow: hidden;
+                  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <img
+                  src="https://images.pexels.com/photos/262047/pexels-photo-262047.jpeg"
+                  alt="Restaurant Lounge"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                  loading="lazy"
+                />
+              </div>
+              <p style="margin-top: 10px; color: #666; text-align: center">
+                Comfortable lounge seating
+              </p>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-animate="fade-up">
+              <div
+                style="
+                  height: 250px;
+                  background: linear-gradient(135deg, #ff8243, #ffbc00);
+                  border-radius: 15px;
+                  overflow: hidden;
+                  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <img
+                  src="https://images.pexels.com/photos/169190/pexels-photo-169190.jpeg"
+                  alt="Restaurant Seating Area"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                  loading="lazy"
+                />
+              </div>
+              <p style="margin-top: 10px; color: #666; text-align: center">
+                Stylish seating section
+              </p>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-animate="fade-up">
+              <div
+                style="
+                  height: 250px;
+                  background: linear-gradient(135deg, #ff8243, #ffbc00);
+                  border-radius: 15px;
+                  overflow: hidden;
+                  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <img
+                  src="https://images.pexels.com/photos/239975/pexels-photo-239975.jpeg"
+                  alt="Restaurant Ambience Night"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                  loading="lazy"
+                />
+              </div>
+              <p style="margin-top: 10px; color: #666; text-align: center">
+                Evening ambience and lighting
+              </p>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-animate="fade-up">
+              <div
+                style="
+                  height: 250px;
+                  background: linear-gradient(135deg, #ff8243, #ffbc00);
+                  border-radius: 15px;
+                  overflow: hidden;
+                  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <img
+                  src="https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg"
+                  alt="Fine Dining Tables"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                  loading="lazy"
+                />
+              </div>
+              <p style="margin-top: 10px; color: #666; text-align: center">
+                Fine dining table setup
+              </p>
+            </div>
+
+            <div class="col-lg-4 col-md-6 gallery-item" data-animate="fade-up">
+              <div
+                style="
+                  height: 250px;
+                  background: linear-gradient(135deg, #ff8243, #ffbc00);
+                  border-radius: 15px;
+                  overflow: hidden;
+                  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <img
+                  src="https://images.pexels.com/photos/776538/pexels-photo-776538.jpeg"
+                  alt="Restaurant Guest Area"
+                  style="width: 100%; height: 100%; object-fit: cover"
+                  loading="lazy"
+                />
+              </div>
+              <p style="margin-top: 10px; color: #666; text-align: center">
+                Spacious guest dining area
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================
+         BLOG SECTION
+         ============================================ -->
+      <section id="blog" class="scroll-section blog">
+        <div class="container">
+          <div class="text-center" style="margin-bottom: 50px">
+            <h2 data-animate="fade-up">Latest Blog</h2>
+            <p
+              data-animate="fade-up"
+              style="max-width: 600px; margin: 20px auto; color: #666"
+            >
+              Read our latest articles about food, cooking tips, and restaurant
+              updates.
+            </p>
+          </div>
+
+          <div class="row">
+            <div class="col-4 blog-post featured-blog-post" data-animate="fade-up">
+              <div
+                style="
+                  background: white;
+                  border-radius: 15px;
+                  overflow: hidden;
+                  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <div
+                  style="
+                    height: 200px;
+                    overflow: hidden;
+                    background: url('assets/images/blog/guideofbiryani.jpg') center / cover no-repeat;
+                  "
+                >
+                  <img
+                    src="assets/images/blog/guideofbiryani.jpg"
+                    alt="History of Indian Biryani"
+                    style="
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                      display: block;
+                    "
+                    loading="lazy"
+                  />
+                </div>
+                <div style="padding: 25px">
+                  <p
+                    style="
+                      color: #ff8243;
+                      font-size: 12px;
+                      font-weight: bold;
+                      margin-bottom: 10px;
+                    "
+                  >
+                    Published on Feb 15, 2026
+                  </p>
+                  <h4 style="color: #0d0d25; margin-bottom: 10px">
+                    The History of Indian Biryani
+                  </h4>
+                  <p style="color: #666; font-size: 14px; margin-bottom: 15px">
+                    From Mughal royal kitchens to modern cities worldwide, explore
+                    how biryani evolved into iconic regional styles.
+                  </p>
+                  <a
+                    href="blog-history-of-biryani.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="
+                      color: #ff8243;
+                      text-decoration: none;
+                      font-weight: bold;
+                    "
+                    >Read More â†’</a
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4 blog-post" data-animate="fade-up">
+              <div
+                style="
+                  background: white;
+                  border-radius: 15px;
+                  overflow: hidden;
+                  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <div style="height: 200px; overflow: hidden">
+                  <img
+                    src="assets/images/blog/blog1.jpg"
+                    alt="Culinary Tips"
+                    style="
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                      display: block;
+                    "
+                    loading="lazy"
+                  />
+                </div>
+                <div style="padding: 25px">
+                  <p
+                    style="
+                      color: #ff8243;
+                      font-size: 12px;
+                      font-weight: bold;
+                      margin-bottom: 10px;
+                    "
+                  >
+                    Published on Dec 15, 2024
+                  </p>
+                  <h4 style="color: #0d0d25; margin-bottom: 10px">
+                    Culinary Tips for Home Cooking
+                  </h4>
+                  <p style="color: #666; font-size: 14px; margin-bottom: 15px">
+                    Discover amazing cooking techniques that professional chefs
+                    use in their kitchens...
+                  </p>
+                  <a
+                    href="blog-culinary-tips-home-cooking.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="
+                      color: #ff8243;
+                      text-decoration: none;
+                      font-weight: bold;
+                    "
+                    >Read More â†’</a
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4 blog-post" data-animate="fade-up">
+              <div
+                style="
+                  background: white;
+                  border-radius: 15px;
+                  overflow: hidden;
+                  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <div style="height: 200px; overflow: hidden">
+                  <img
+                    src="assets/images/blog/blog2.jpg"
+                    alt="The Art of Fine Dining"
+                    style="
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                      display: block;
+                    "
+                    loading="lazy"
+                  />
+                </div>
+                <div style="padding: 25px">
+                  <p
+                    style="
+                      color: #ff8243;
+                      font-size: 12px;
+                      font-weight: bold;
+                      margin-bottom: 10px;
+                    "
+                  >
+                    Published on Dec 10, 2024
+                  </p>
+                  <h4 style="color: #0d0d25; margin-bottom: 10px">
+                    The Art of Fine Dining
+                  </h4>
+                  <p style="color: #666; font-size: 14px; margin-bottom: 15px">
+                    Explore the elegance and sophistication of fine dining
+                    traditions worldwide...
+                  </p>
+                  <a
+                    href="blog-art-of-fine-dining.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="
+                      color: #ff8243;
+                      text-decoration: none;
+                      font-weight: bold;
+                    "
+                    >Read More â†’</a
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4 blog-post" data-animate="fade-up">
+              <div
+                style="
+                  background: white;
+                  border-radius: 15px;
+                  overflow: hidden;
+                  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                "
+              >
+                <div style="height: 200px; overflow: hidden">
+                  <img
+                    src="assets/images/blog/blog3.jpg"
+                    alt="Seasonal Ingredients"
+                    style="
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                      display: block;
+                    "
+                    loading="lazy"
+                  />
+                </div>
+                <div style="padding: 25px">
+                  <p
+                    style="
+                      color: #ff8243;
+                      font-size: 12px;
+                      font-weight: bold;
+                      margin-bottom: 10px;
+                    "
+                  >
+                    Published on Dec 5, 2024
+                  </p>
+                  <h4 style="color: #0d0d25; margin-bottom: 10px">
+                    Seasonal Ingredients Guide
+                  </h4>
+                  <p style="color: #666; font-size: 14px; margin-bottom: 15px">
+                    Learn about seasonal ingredients and how to select the
+                    freshest produce...
+                  </p>
+                  <a
+                    href="blog-seasonal-ingredients-guide.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="
+                      color: #ff8243;
+                      text-decoration: none;
+                      font-weight: bold;
+                    "
+                    >Read More â†’</a
+                  >
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================
+         CONTACT SECTION
+         ============================================ -->
+      <section id="contact" class="scroll-section contact">
+        <div class="container">
+          <div class="text-center" style="margin-bottom: 50px">
+            <h2 data-animate="fade-up">Get in Touch</h2>
+            <p
+              data-animate="fade-up"
+              style="max-width: 600px; margin: 20px auto; opacity: 0.9"
+            >
+              Have questions or want to make a feedback? We'd love to hear
+              from you!
+            </p>
+          </div>
+
+          <div class="row">
+            <div class="col-6" data-animate="slide-left">
+              <form
+                id="contactForm"
+                style="
+                  background: rgba(255, 255, 255, 0.1);
+                  padding: 30px;
+                  border-radius: 15px;
+                  backdrop-filter: blur(10px);
+                "
+              >
+                <div style="margin-bottom: 20px">
+                  <input
+                    type="text"
+                    placeholder="Your Name"
+                    required
+                    style="
+                      width: 100%;
+                      padding: 12px 15px;
+                      border: none;
+                      border-bottom: 2px solid #ff8243;
+                      background: transparent;
+                      color: white;
+                      font-size: 14px;
+                      outline: none;
+                    "
+                  />
+                </div>
+                <div style="margin-bottom: 20px">
+                  <input
+                    type="email"
+                    placeholder="Your Email"
+                    required
+                    style="
+                      width: 100%;
+                      padding: 12px 15px;
+                      border: none;
+                      border-bottom: 2px solid #ff8243;
+                      background: transparent;
+                      color: white;
+                      font-size: 14px;
+                      outline: none;
+                    "
+                  />
+                </div>
+                <div style="margin-bottom: 20px">
+                  <input
+                    type="text"
+                    placeholder="Subject"
+                    required
+                    style="
+                      width: 100%;
+                      padding: 12px 15px;
+                      border: none;
+                      border-bottom: 2px solid #ff8243;
+                      background: transparent;
+                      color: white;
+                      font-size: 14px;
+                      outline: none;
+                    "
+                  />
+                </div>
+                <div style="margin-bottom: 20px">
+                  <textarea
+                    placeholder="Your Message"
+                    rows="5"
+                    required
+                    style="
+                      width: 100%;
+                      padding: 12px 15px;
+                      border: none;
+                      border-bottom: 2px solid #ff8243;
+                      background: transparent;
+                      color: white;
+                      font-size: 14px;
+                      outline: none;
+                      resize: none;
+                    "
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  class="sec-btn"
+                  style="width: 100%; padding: 15px"
+                >
+                  Send Message
+                </button>
+              </form>
+            </div>
+
+            <div class="col-6" data-animate="slide-right">
+              <div style="padding: 30px">
+                <h3 style="margin-bottom: 30px; color: white">
+                  Contact Information
+                </h3>
+
+                <div class="contact-icon-row" style="margin-bottom: 25px; display: flex; gap: 15px">
+                  <div style="font-size: 24px; color: #ff8243">
+                    <i class="fas fa-map-marker-alt"></i>
+                  </div>
+                  <div>
+                    <h5 style="color: white; margin-bottom: 5px">Address</h5>
+                    <p>Fatuha, Patna, 803201</p>
+                  </div>
+                </div>
+
+                <div class="contact-icon-row" style="margin-bottom: 25px; display: flex; gap: 15px">
+                  <div style="font-size: 24px; color: #ff8243">
+                    <i class="fas fa-phone"></i>
+                  </div>
+                  <div>
+                    <h5 style="color: white; margin-bottom: 5px">Phone</h5>
+                    <p>+91 7858062571</p>
+                  </div>
+                </div>
+
+                <div class="contact-icon-row" style="margin-bottom: 25px; display: flex; gap: 15px">
+                  <div style="font-size: 24px; color: #ff8243">
+                    <i class="fas fa-envelope"></i>
+                  </div>
+                  <div>
+                    <h5 style="color: white; margin-bottom: 5px">Email</h5>
+                    <p>rahmaadnan412@gmail.com</p>
+                  </div>
+                </div>
+
+                <div class="contact-icon-row" style="margin-bottom: 25px; display: flex; gap: 15px">
+                  <div style="font-size: 24px; color: #ff8243">
+                    <i class="fas fa-clock"></i>
+                  </div>
+                  <div>
+                    <h5 style="color: white; margin-bottom: 5px">Hours</h5>
+                    <p>
+                      Mon - Thu: 11:00 AM - 10:00 PM<br />Fri - Sat: 11:00 AM -
+                      11:00 PM<br />Sun: 12:00 PM - 9:00 PM
+                    </p>
+                  </div>
+                </div>
+
+                <div class="follow-us-block" style="margin-top: 30px">
+                  <h5 style="color: white; margin-bottom: 15px">Follow Us</h5>
+                  <div class="follow-us-links" style="display: flex; gap: 15px; align-items: center">
+                    <a
+                      class="follow-us-link"
+                      href="https://instagram.com/faizul_rahman007"
+                      target="_blank"
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: rgba(255, 255, 255, 0.1);
+                        border-radius: 50%;
+                        text-decoration: none;
+                        transition: all 0.3s ease;
+                        overflow: hidden;
+                      "
+                      title="Follow us on Instagram"
+                    >
+                      <img
+                        src="assets/images/instagrsm.jpg"
+                        alt="Instagram"
+                        style="width: 24px; height: 24px; object-fit: contain"
+                      />
+                    </a>
+                    <a
+                      class="follow-us-link"
+                      href="https://github.com/FaizulRahman786"
+                      target="_blank"
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: rgba(255, 255, 255, 0.1);
+                        border-radius: 50%;
+                        text-decoration: none;
+                        transition: all 0.3s ease;
+                        overflow: hidden;
+                      "
+                      title="Visit our GitHub"
+                    >
+                      <img
+                        src="assets/images/Github.png"
+                        alt="GitHub"
+                        style="width: 24px; height: 24px; object-fit: contain"
+                      />
+                    </a>
+                    <a
+                      class="follow-us-link"
+                      href="https://linkedin.com/in/faizul-rahman-87974b397"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: rgba(255, 255, 255, 0.1);
+                        border-radius: 50%;
+                        text-decoration: none;
+                        transition: all 0.3s ease;
+                        overflow: hidden;
+                      "
+                      title="Visit our LinkedIn"
+                    >
+                      <img
+                        src="assets/images/linkedin.png"
+                        alt="LinkedIn"
+                        style="width: 24px; height: 24px; object-fit: contain"
+                      />
+                    </a>
+                    <a
+                      class="follow-us-link"
+                      href="https://wa.me/7858062571"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style="
+                        width: 40px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: rgba(255, 255, 255, 0.1);
+                        border-radius: 50%;
+                        text-decoration: none;
+                        transition: all 0.3s ease;
+                        overflow: hidden;
+                      "
+                      title="Chat on WhatsApp"
+                    >
+                      <img
+                        src="assets/images/whatsapp.jpg"
+                        alt="WhatsApp"
+                        style="width: 24px; height: 24px; object-fit: contain"
+                      />
+                    </a>
+                  </div>
+                </div>
+
+                <div class="reservation-cta" style="margin-top: 30px;">
+                  <button
+                    type="button"
+                    class="sec-btn w-100"
+                    data-bs-toggle="modal"
+                    data-bs-target="#reservationModal"
+                    id="contactReserveBtn"
+                  >
+                    Reserve One of 50 Tables
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Scroll Indicator Dots -->
+    <div class="scroll-indicator"></div>
+
+    <div id="profilePanel" aria-hidden="true">
+      <div class="profile-row">
+        <h5 class="profile-title">Your Details</h5>
+        <button id="profileClose" class="profile-close" type="button" aria-label="Close profile panel">&times;</button>
+      </div>
+      <div id="profileMain" class="profile-muted" style="margin-top: 4px">Loading profile...</div>
+
+      <div class="profile-block">
+        <div class="profile-row" style="margin-bottom: 8px">
+          <h6 style="margin: 0">Previous Activity</h6>
+          <button id="logoutBtn" class="logout-small" type="button">Logout</button>
+        </div>
+        <ul id="activityList" class="profile-list">
+          <li>No recent activity yet.</li>
+        </ul>
+      </div>
+
+      <div class="profile-block">
+        <h6>Restaurant Reviews (Urdu)</h6>
+        <ul id="urduReviews" class="profile-list">
+          <li>مزید معلومات لوڈ ہو رہی ہیں...</li>
+        </ul>
+      </div>
+
+      <div class="profile-block">
+        <h6>Urdu Quotation</h6>
+        <p id="urduQuote" class="profile-quote">مہمان نوازی دلوں کو جوڑتی ہے۔</p>
+      </div>
+
+      <div class="profile-block">
+        <h6>Urdu Poetry</h6>
+        <p id="urduPoetry" class="profile-quote">لفظوں میں خوشبو ہو تو کھانا بھی دعا بن جاتا ہے۔</p>
+      </div>
+    </div>
+
+    <div class="modal fade cart-added-modal" id="addToCartModal" tabindex="-1" aria-labelledby="addToCartModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addToCartModalLabel">Item Added to Cart</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row g-3 align-items-center">
+              <div class="col-md-4">
+                <img id="cartPopupImage" src="" alt="Cart item" class="img-fluid rounded-3 w-100" />
+              </div>
+              <div class="col-md-8">
+                <h4 id="cartPopupName" class="mb-2"></h4>
+                <p id="cartPopupDesc" class="mb-2 status-note"></p>
+                <p class="mb-1">Price: <strong id="cartPopupPrice"></strong></p>
+                <div class="d-flex align-items-center gap-2 my-3">
+                  <span>Quantity:</span>
+                  <button type="button" class="btn btn-outline-secondary btn-sm" id="cartQtyMinus">-</button>
+                  <span id="cartPopupQty" class="fw-bold">1</span>
+                  <button type="button" class="btn btn-outline-secondary btn-sm" id="cartQtyPlus">+</button>
+                </div>
+                <p class="mb-0">Total: <strong id="cartPopupTotal"></strong></p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Shopping</button>
+            <button type="button" class="btn btn-primary" id="viewCartBtn" data-bs-target="#cartOverviewModal" data-bs-toggle="modal">View Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="cartOverviewModal" tabindex="-1" aria-labelledby="cartOverviewLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cartOverviewLabel">Your Cart</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div id="cartOverviewList"></div>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <span class="fw-semibold">Grand Total</span>
+              <strong id="cartOverviewTotal">$0.00</strong>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Shopping</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="favoritesModal" tabindex="-1" aria-labelledby="favoritesModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="favoritesModalLabel">Liked Images</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div id="favoritesOverviewList"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="reservationModal" tabindex="-1" aria-labelledby="reservationModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="reservationModalLabel">Reserve a Table</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="reservationForm">
+            <div class="modal-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Name</label>
+                  <input type="text" class="form-control" id="reservationName" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" id="reservationEmail" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Phone</label>
+                  <input type="tel" class="form-control" id="reservationPhone" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Date & Time</label>
+                  <input type="datetime-local" class="form-control" id="reservationDateTime" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Guests</label>
+                  <input type="number" min="1" max="10" value="2" class="form-control" id="reservationGuests" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Table Number (1-50)</label>
+                  <select class="form-select" id="reservationTable" required></select>
+                  <small id="tableAvailabilityText" class="status-note d-block mt-1"></small>
+                </div>
+                <div class="col-12">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="reservationWhatsAppOptIn" checked />
+                    <label class="form-check-label" for="reservationWhatsAppOptIn">
+                      I agree to receive reservation updates on WhatsApp.
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Confirm Reservation</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="reservationSuccessModal" tabindex="-1" aria-labelledby="reservationSuccessLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="reservationSuccessLabel">Reservation Confirmed</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p id="reservationSuccessText" class="mb-0"></p>
+            <p id="reservationWhatsAppModeText" class="status-note mt-2 mb-0"></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Done</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      (function () {
+        var AUTH_STORAGE_KEY = "rahman_auth_session";
+        var LEGACY_STORAGE_KEY = "rahman_google_user";
+        var LOGIN_PAGE = "login.html";
+        var LOCAL_API = "http://localhost:3000";
+        var API_TIMEOUT_MS = 12000;
+        var API_RETRY_COUNT = 2;
+        var accountTrigger = document.getElementById("accountTrigger");
+        var accountInitials = document.getElementById("accountInitials");
+        var profilePanel = document.getElementById("profilePanel");
+        var profileClose = document.getElementById("profileClose");
+        var profileMain = document.getElementById("profileMain");
+        var activityList = document.getElementById("activityList");
+        var urduReviews = document.getElementById("urduReviews");
+        var urduQuote = document.getElementById("urduQuote");
+        var urduPoetry = document.getElementById("urduPoetry");
+        var logoutBtn = document.getElementById("logoutBtn");
+        var session = null;
+
+        function getApiBase() {
+          var host = window.location.hostname;
+          var origin = window.location.origin;
+          if (window.location.protocol === "file:" || !host || host === "localhost" || host === "127.0.0.1") {
+            return LOCAL_API;
+          }
+          return origin;
+        }
+
+        function getNameInitials(fullName) {
+          var text = String(fullName || "").trim();
+          if (!text) {
+            return "RR";
+          }
+
+          var parts = text.split(/\s+/).filter(Boolean);
+          if (parts.length === 1) {
+            var one = parts[0].replace(/[^a-zA-Z]/g, "");
+            return one ? one.slice(0, 2).toUpperCase() : "RR";
+          }
+
+          var first = (parts[0][0] || "").toUpperCase();
+          var last = (parts[parts.length - 1][0] || "").toUpperCase();
+          return (first + last) || "RR";
+        }
+
+        function getColorPairByName(fullName) {
+          var palettes = [
+            ["#0ea5e9", "#2563eb"],
+            ["#8b5cf6", "#6d28d9"],
+            ["#ef4444", "#b91c1c"],
+            ["#f59e0b", "#d97706"],
+            ["#10b981", "#047857"],
+            ["#ec4899", "#be185d"],
+            ["#6366f1", "#4338ca"],
+            ["#f97316", "#c2410c"]
+          ];
+
+          var source = String(fullName || "RAHMAN");
+          var hash = 0;
+          for (var i = 0; i < source.length; i++) {
+            hash = (hash << 5) - hash + source.charCodeAt(i);
+            hash |= 0;
+          }
+
+          return palettes[Math.abs(hash) % palettes.length];
+        }
+
+        function applyAccountIcon(fullName) {
+          if (!accountInitials) {
+            return;
+          }
+          var initials = getNameInitials(fullName);
+          var pair = getColorPairByName(fullName);
+          accountInitials.textContent = initials;
+          accountInitials.style.background = "linear-gradient(135deg, " + pair[0] + ", " + pair[1] + ")";
+        }
+
+        function authHeaders() {
+          var headers = { "Content-Type": "application/json" };
+          if (session && session.token) {
+            headers.Authorization = "Bearer " + session.token;
+          }
+          return headers;
+        }
+
+        function isNetworkFetchError(error) {
+          if (!error) {
+            return false;
+          }
+
+          var message = String(error.message || "").toLowerCase();
+          return (
+            error.name === "TypeError" ||
+            error.name === "AbortError" ||
+            message.indexOf("failed to fetch") !== -1 ||
+            message.indexOf("networkerror") !== -1 ||
+            message.indexOf("network request failed") !== -1
+          );
+        }
+
+        function wait(ms) {
+          return new Promise(function (resolve) {
+            setTimeout(resolve, ms);
+          });
+        }
+
+        async function fetchWithTimeout(url, options, timeoutMs) {
+          var controller = new AbortController();
+          var timer = setTimeout(function () {
+            controller.abort();
+          }, timeoutMs || API_TIMEOUT_MS);
+
+          try {
+            var requestOptions = options || {};
+            requestOptions.signal = controller.signal;
+            return await fetch(url, requestOptions);
+          } finally {
+            clearTimeout(timer);
+          }
+        }
+
+        async function fetchJson(path, options) {
+          var lastError = null;
+
+          for (var attempt = 1; attempt <= API_RETRY_COUNT; attempt++) {
+            try {
+              var response = await fetchWithTimeout(getApiBase() + path, options || {}, API_TIMEOUT_MS);
+              var data = await response.json().catch(function () { return {}; });
+
+              if (!response.ok) {
+                throw new Error((data && data.message) || "Request failed");
+              }
+
+              return data;
+            } catch (error) {
+              lastError = error;
+              if (isNetworkFetchError(error) && attempt < API_RETRY_COUNT) {
+                await wait(250 * attempt);
+                continue;
+              }
+              break;
+            }
+          }
+
+          if (isNetworkFetchError(lastError)) {
+            throw new Error("Service is temporarily unreachable. Please ensure backend is running on http://localhost:3000.");
+          }
+
+          throw new Error(String((lastError && lastError.message) || "Request failed"));
+        }
+
+        try {
+          var raw = localStorage.getItem(AUTH_STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
+          if (raw) {
+            session = JSON.parse(raw);
+            var displayName = (session.user && (session.user.name || session.user.email)) || session.name || session.email;
+            applyAccountIcon(displayName || "RAHMAN RESTAURANT");
+          } else {
+            applyAccountIcon("RAHMAN RESTAURANT");
+          }
+        } catch (e) {
+          applyAccountIcon("RAHMAN RESTAURANT");
+        }
+
+        async function loadPanelData() {
+          if (!session) {
+            profileMain.textContent = "Signed-in user";
+            return;
+          }
+
+          try {
+            var me = await fetchJson("/api/auth/me", { headers: authHeaders() });
+            var name = (me.user && (me.user.name || me.user.email)) || "User";
+            var email = (me.user && me.user.email) || "";
+            profileMain.textContent = name + (email ? " • " + email : "");
+          } catch (error) {
+            profileMain.textContent = "Signed-in user";
+          }
+
+          try {
+            var activity = await fetchJson("/api/activity/history", { headers: authHeaders() });
+            var items = Array.isArray(activity.activities) ? activity.activities.slice(0, 5) : [];
+            activityList.innerHTML = items.length
+              ? items.map(function (entry) {
+                  var text = entry.description || entry.actionType || entry.type || "Activity";
+                  var timestamp = entry.timestamp ? new Date(entry.timestamp).toLocaleString() : "";
+                  return "<li>" + text + (timestamp ? "<br><small>" + timestamp + "</small>" : "") + "</li>";
+                }).join("")
+              : "<li>No recent activity yet.</li>";
+          } catch (error) {
+            activityList.innerHTML = "<li>Unable to load activity right now.</li>";
+          }
+
+          try {
+            var info = await fetchJson("/api/restaurant/info");
+            var reviews = info && Array.isArray(info.reviews) ? info.reviews : [];
+            urduReviews.innerHTML = reviews.length
+              ? reviews.slice(0, 4).map(function (item) { return "<li>" + (item.textUrdu || item.text || "") + "</li>"; }).join("")
+              : "<li>لذیذ کھانا، بہترین ماحول اور خلوص بھری خدمت۔</li>";
+
+            if (info && Array.isArray(info.quotations) && info.quotations.length) {
+              urduQuote.textContent = info.quotations[0].textUrdu || info.quotations[0].text || urduQuote.textContent;
+            }
+            if (info && Array.isArray(info.poetry) && info.poetry.length) {
+              urduPoetry.textContent = info.poetry[0].textUrdu || info.poetry[0].text || urduPoetry.textContent;
+            }
+          } catch (error) {
+            urduReviews.innerHTML = "<li>ذائقہ ایسا کہ دل خوش ہو جائے۔</li>";
+            urduQuote.textContent = "اچھی ضیافت اچھی یادیں بناتی ہے۔";
+            urduPoetry.textContent = "محبت سے پکا کھانا روح تک اتر جاتا ہے۔";
+          }
+        }
+
+        function openPanel(event) {
+          if (event) {
+            event.preventDefault();
+          }
+          if (!profilePanel) {
+            return;
+          }
+          profilePanel.classList.add("show");
+          profilePanel.setAttribute("aria-hidden", "false");
+          loadPanelData();
+        }
+
+        function closePanel() {
+          if (!profilePanel) {
+            return;
+          }
+          profilePanel.classList.remove("show");
+          profilePanel.setAttribute("aria-hidden", "true");
+        }
+
+        if (accountTrigger) {
+          accountTrigger.addEventListener("click", openPanel);
+        }
+
+        if (profileClose) {
+          profileClose.addEventListener("click", closePanel);
+        }
+
+        document.addEventListener("click", function (event) {
+          if (!profilePanel || !profilePanel.classList.contains("show")) {
+            return;
+          }
+          if (profilePanel.contains(event.target) || (accountTrigger && accountTrigger.contains(event.target))) {
+            return;
+          }
+          closePanel();
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            closePanel();
+          }
+        });
+
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", function () {
+            localStorage.removeItem(AUTH_STORAGE_KEY);
+            localStorage.removeItem(LEGACY_STORAGE_KEY);
+            window.location.replace(LOGIN_PAGE);
+          });
+        }
+      })();
+    </script>
+    <script src="assets/js/image-fallback.js"></script>
+    <script src="scroll-main.js"></script>
+  </body>
+</html>

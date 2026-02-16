@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Image unavailable</title>
+  <desc id="desc">A neutral placeholder shown when an image fails to load.</desc>
+  <rect width="1200" height="800" fill="#f3f3f5"/>
+  <rect x="24" y="24" width="1152" height="752" rx="18" fill="none" stroke="#d6d6de" stroke-width="4" stroke-dasharray="10 10"/>
+  <g fill="none" stroke="#9a9aad" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="470" y="290" width="260" height="170" rx="14"/>
+    <path d="M500 430l70-70 45 45 45-45 40 40"/>
+    <circle cx="665" cy="335" r="14"/>
+  </g>
+  <text x="600" y="530" text-anchor="middle" fill="#6f7082" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">Image unavailable</text>
+</svg>

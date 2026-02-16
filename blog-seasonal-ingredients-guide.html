@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seasonal Ingredients Guide | RAHMAN</title>
+    <style>
+      :root { --primary: #ff8243; --dark: #0d0d25; --text: #444; }
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: Arial, sans-serif; color: var(--text); background: #f8fbf7; }
+      .article-wrap { max-width: 980px; margin: 40px auto; background: #fff; border-radius: 16px; box-shadow: 0 16px 40px rgba(13,13,37,0.12); overflow: hidden; }
+      .hero { padding: 28px 26px 10px; }
+      .hero h1 { margin: 0 0 8px; color: var(--dark); font-size: clamp(28px, 4vw, 42px); }
+      .hero p { margin: 0; color: #666; }
+      .cover { width: 100%; height: min(420px, 52vw); object-fit: cover; display: block; }
+      .content { padding: 26px; line-height: 1.8; font-size: 16px; }
+      .content h2 { color: var(--dark); margin: 18px 0 8px; }
+      .content p { margin: 0 0 14px; }
+      .note { margin-top: 24px; padding: 14px; border-left: 4px solid var(--primary); background: #fff4ed; border-radius: 8px; }
+      .top-actions { max-width: 980px; margin: 20px auto 0; padding: 0 8px; }
+      .home-btn { display: inline-block; position: fixed; right: 20px; bottom: 20px; z-index: 999; background: var(--primary); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: #fff; text-decoration: none; font-weight: 700; padding: 10px 16px; border-radius: 8px; box-shadow: 0 6px 16px rgba(13, 13, 37, 0.2); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+      .home-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(13, 13, 37, 0.24); }
+      @media (max-width: 768px) {
+        .home-btn { right: 12px; bottom: 12px; padding: 8px 12px; font-size: 13px; background: rgba(255, 130, 67, 0.8); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top-actions">
+      <a class="home-btn" href="index-scroll.html">Back to Home</a>
+    </div>
+    <article class="article-wrap">
+      <header class="hero">
+        <h1>Seasonal Ingredients Guide</h1>
+        <p>How to choose fresher produce and build menus around the season</p>
+      </header>
+      <img src="assets/images/blog/blog3.jpg" alt="Seasonal produce" class="cover" />
+      <section class="content">
+        <h2>Why Seasonal Matters</h2>
+        <p>Seasonal ingredients are often fresher, better tasting, and more cost-effective due to local availability and shorter storage cycles.</p>
+        <h2>How to Identify Fresh Produce</h2>
+        <p>Look for vibrant color, firm texture, natural aroma, and minimal bruising. Fresh herbs should feel crisp and fragrant.</p>
+        <h2>Plan Menus by Weather</h2>
+        <p>Use lighter, hydrating dishes in summer and richer, warming foods in colder months for better comfort and nutrition.</p>
+        <h2>Storage and Rotation</h2>
+        <p>Store produce by moisture needs, label purchase dates, and rotate older stock first to reduce waste.</p>
+        <div class="note">Tip: Build one weekly special around market-fresh ingredients to keep the menu dynamic.</div>
+      </section>
+    </article>
+    <script src="assets/js/image-fallback.js"></script>
+  </body>
+</html>

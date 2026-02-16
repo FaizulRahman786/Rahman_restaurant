@@ -1,0 +1,41 @@
+{
+  "name": "resturant",
+  "version": "1.0.0",
+  "description": "A fully responsive, modern restaurant website with beautiful animations, interactive menu system, and professional design.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "smoke:health": "node ./scripts/smoke-health.js",
+    "backup:site": "powershell -ExecutionPolicy Bypass -File ./scripts/backup-website.ps1",
+    "restore:site": "powershell -ExecutionPolicy Bypass -File ./scripts/restore-website.ps1",
+    "backup:schedule": "powershell -ExecutionPolicy Bypass -File ./scripts/setup-backup-schedule.ps1",
+    "backup:unschedule": "powershell -ExecutionPolicy Bypass -File ./scripts/remove-backup-schedule.ps1",
+    "backup:offsite": "powershell -ExecutionPolicy Bypass -File ./scripts/copy-backup-offsite.ps1",
+    "backup:offsite:schedule": "powershell -ExecutionPolicy Bypass -File ./scripts/setup-offsite-schedule.ps1",
+    "backup:offsite:unschedule": "powershell -ExecutionPolicy Bypass -File ./scripts/remove-offsite-schedule.ps1",
+    "images:menu-placeholders": "powershell -ExecutionPolicy Bypass -File ./scripts/generate-menu-placeholders.ps1",
+    "images:menu-real": "powershell -ExecutionPolicy Bypass -File ./scripts/replace-menu-placeholders-with-real-images.ps1",
+    "db:install": "powershell -ExecutionPolicy Bypass -File ./scripts/install-postgres.ps1",
+    "db:init": "powershell -ExecutionPolicy Bypass -File ./scripts/setup-postgres.ps1",
+    "db:start": "docker compose up -d postgres",
+    "db:stop": "docker compose down",
+    "db:logs": "docker compose logs -f postgres"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "google-auth-library": "^10.4.1",
+    "helmet": "^8.1.0",
+    "image-size": "^2.0.2",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.16.3"
+  }
+}

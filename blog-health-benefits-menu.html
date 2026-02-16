@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Health Benefits of Our Menu | RAHMAN</title>
+    <style>
+      :root {
+        --primary: #ff8243;
+        --dark: #0d0d25;
+        --text: #444;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        color: var(--text);
+        background: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.96)),
+          url('assets/images/blog/blog2.jpg') center/cover fixed no-repeat;
+      }
+      .article-wrap {
+        max-width: 980px;
+        margin: 40px auto;
+        background: rgba(255, 255, 255, 0.97);
+        border-radius: 16px;
+        box-shadow: 0 16px 40px rgba(13, 13, 37, 0.15);
+        overflow: hidden;
+      }
+      .hero { padding: 28px 26px 10px; }
+      .hero h1 { margin: 0 0 8px; color: var(--dark); font-size: clamp(28px, 4vw, 42px); }
+      .hero p { margin: 0; color: #666; }
+      .cover { width: 100%; height: min(420px, 52vw); object-fit: cover; display: block; }
+      .content { padding: 26px; line-height: 1.8; font-size: 16px; }
+      .content h2 { color: var(--dark); margin: 18px 0 8px; }
+      .content p { margin: 0 0 14px; }
+      .note { margin-top: 24px; padding: 14px; border-left: 4px solid var(--primary); background: #fff4ed; border-radius: 8px; }
+      .top-actions { max-width: 980px; margin: 20px auto 0; padding: 0 8px; }
+      .home-btn { display: inline-block; position: fixed; right: 20px; bottom: 20px; z-index: 999; background: var(--primary); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); color: #fff; text-decoration: none; font-weight: 700; padding: 10px 16px; border-radius: 8px; box-shadow: 0 6px 16px rgba(13, 13, 37, 0.2); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+      .home-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(13, 13, 37, 0.24); }
+      @media (max-width: 768px) {
+        .home-btn { right: 12px; bottom: 12px; padding: 8px 12px; font-size: 13px; background: rgba(255, 130, 67, 0.8); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top-actions">
+      <a class="home-btn" href="index-scroll.html">Back to Home</a>
+    </div>
+    <article class="article-wrap">
+      <header class="hero">
+        <h1>Health Benefits of Our Menu</h1>
+        <p>How traditional techniques and fresh ingredients support everyday wellness</p>
+      </header>
+      <img src="assets/images/blog/blog2.jpg" alt="Healthy restaurant dishes" class="cover" />
+      <section class="content">
+        <h2>Fresh Ingredients, Better Nutrition</h2>
+        <p>Our kitchen prioritizes seasonal vegetables, quality proteins, and balanced grains so every plate delivers flavor with nutritional value.</p>
+        <h2>Smart Spice Usage</h2>
+        <p>Turmeric, cumin, ginger, and coriander are used in layers to enhance taste while adding antioxidant and digestive-support properties.</p>
+        <h2>Balanced Cooking Methods</h2>
+        <p>We combine grilling, slow-cooking, sautéing, and controlled oil usage to preserve texture and nutrients without making food heavy.</p>
+        <h2>Portion and Variety</h2>
+        <p>A strong meal includes protein, fiber, and complex carbs. Our menu structure helps diners choose satisfying, balanced combinations.</p>
+        <div class="note">Tip: Pair curries with salad, lentils, or grilled sides for a more complete meal profile.</div>
+      </section>
+    </article>
+    <script src="assets/js/image-fallback.js"></script>
+  </body>
+</html>

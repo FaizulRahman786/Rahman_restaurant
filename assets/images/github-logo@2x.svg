@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <rect width="256" height="256" rx="40" fill="#24292E"/>
+  <path d="M128 72c-32 0-56 24-56 56 0 24 16 44 36 52 4 1  -2 0-6 0-8-2-12-6-12-12 0-6 2-14 0-20-16 4-20 12-20 12s-4 12-4 24c0 12 8 20 16 24 8 4 16 4 24 4 4 0 8 0 12-2 8 0 16-4 20-8 4-4 8-12 8-20 0-16-12-28-28-32 0 0-4-2-6-2 4-2 12-8 12-20 0-20-16-36-36-36z" fill="#fff" transform="scale(0.9) translate(13,13)"/>
+  <text x="128" y="184" font-size="20" font-family="Arial" fill="#fff" text-anchor="middle">GH</text>
+</svg>
