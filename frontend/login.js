@@ -53,6 +53,18 @@ function getFriendlyAuthMessage(error, fallbackMessage) {
     return message || fallbackMessage;
 }
 
+function isServerUnavailableError(error) {
+    const message = String(error?.message || "").toLowerCase();
+    return (
+        isNetworkFetchError(error) ||
+        message.includes("cannot reach the server right now") ||
+        message.includes("temporarily unreachable") ||
+        message.includes("request failed (503)") ||
+        message.includes("request failed (502)") ||
+        message.includes("request failed (504)")
+    );
+}
+
 function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -251,7 +263,7 @@ async function handleEmailLogin(event) {
         window.location.href = REDIRECT_AFTER_LOGIN;
     } catch (error) {
         const msg = getFriendlyAuthMessage(error, "Email login failed.");
-        if (isNetworkFetchError(error)) {
+        if (isServerUnavailableError(error)) {
             const offlineSession = createOfflineSession(email, email.split("@")[0]);
             saveSession(offlineSession);
             setStatus("Server is temporarily offline. Signed in with local mode.", false);
@@ -340,7 +352,7 @@ async function handleEmailRegister() {
         saveSession(result);
         window.location.href = REDIRECT_AFTER_LOGIN;
     } catch (error) {
-        if (isNetworkFetchError(error)) {
+        if (isServerUnavailableError(error)) {
             const offlineSession = createOfflineSession(email, email.split("@")[0]);
             saveSession(offlineSession);
             setStatus("Server is temporarily offline. Account created in local mode.", false);
