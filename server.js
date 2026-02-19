@@ -58,7 +58,8 @@ const PGSSL_REJECT_UNAUTHORIZED =
   'true';
 const JWT_SECRET = process.env.JWT_SECRET || 'change-this-secret';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1h';
-const CORS_ORIGIN =
+const CORS_ORIGIN = 
+
   process.env.CORS_ORIGIN ||
   'http://localhost:3000,http://127.0.0.1:3000,http://localhost:5500,http://127.0.0.1:5500';
 const CORS_ALLOWLIST = CORS_ORIGIN.split(',')

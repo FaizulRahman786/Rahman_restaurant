@@ -45,3 +45,22 @@
 ## 7) Rollback Readiness
 - Keep a backup copy of current `.env` and deployment config.
 - If needed, redeploy previous stable build and restore previous `.env`.
+
+## 8) Render Deployment (Blueprint)
+- Ensure `render.yaml` is committed in repo root.
+- Push code to GitHub.
+- In Render dashboard: **New** → **Blueprint** → select repo.
+- Render provisions:
+  - Web service: `rahman-web`
+  - PostgreSQL: `rahman-postgres`
+- After first deploy, verify service environment variables:
+  - `NODE_ENV=production`
+  - `DATABASE_URL` (linked from managed database)
+  - `JWT_SECRET` (auto-generated)
+  - `CORS_ORIGIN` (default: `https://rahman-web.onrender.com`; add custom domain if used)
+
+### Render Post-Deploy Checks
+- Open `https://rahman-web.onrender.com/api/health`
+- Expect `HEALTH_OK=true` and `DB_CONNECTED=true`
+- Open app root and confirm login page loads.
+- Test one reservation flow.
