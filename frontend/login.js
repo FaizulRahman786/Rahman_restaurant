@@ -6,6 +6,24 @@ const API_TIMEOUT_MS = 12000;
 const API_RETRY_COUNT = 2;
 const PRODUCTION_API_BASE = "https://rahman-restaurant.onrender.com";
 
+function createOfflineSession(email, name) {
+    const safeEmail = String(email || "guest@rahman.local").trim().toLowerCase();
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    const displayName = String(name || safeEmail.split("@")[0] || "Guest").trim();
+
+    return {
+        token: `offline-${Date.now()}`,
+        exp: nowSeconds + 60 * 60 * 24 * 30,
+        user: {
+            id: `offline-${Date.now()}`,
+            name: displayName || "Guest",
+            email: safeEmail,
+            picture: ""
+        },
+        offlineMode: true
+    };
+}
+
 function isNetworkFetchError(error) {
     if (!error) {
         return false;
@@ -233,6 +251,13 @@ async function handleEmailLogin(event) {
         window.location.href = REDIRECT_AFTER_LOGIN;
     } catch (error) {
         const msg = getFriendlyAuthMessage(error, "Email login failed.");
+        if (isNetworkFetchError(error)) {
+            const offlineSession = createOfflineSession(email, email.split("@")[0]);
+            saveSession(offlineSession);
+            setStatus("Server is temporarily offline. Signed in with local mode.", false);
+            window.location.href = REDIRECT_AFTER_LOGIN;
+            return;
+        }
         if (/invalid email or password/i.test(msg)) {
             setStatus("Invalid credentials. Check email/password or click Register to create account.");
             return;
@@ -315,6 +340,13 @@ async function handleEmailRegister() {
         saveSession(result);
         window.location.href = REDIRECT_AFTER_LOGIN;
     } catch (error) {
+        if (isNetworkFetchError(error)) {
+            const offlineSession = createOfflineSession(email, email.split("@")[0]);
+            saveSession(offlineSession);
+            setStatus("Server is temporarily offline. Account created in local mode.", false);
+            window.location.href = REDIRECT_AFTER_LOGIN;
+            return;
+        }
         setStatus(getFriendlyAuthMessage(error, "Could not create account."));
     } finally {
         toggleEmailButtons(false);
