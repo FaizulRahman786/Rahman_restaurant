@@ -2,9 +2,21 @@
 
 This project now includes one-command backup and restore tools so the website can be recovered quickly after failures.
 
+Project layout:
+- `frontend/` contains static UI files
+- `backend/` contains server, scripts, env files, and backups
+
 ## 1) Create a full backup
 
-Run from the project root:
+Run commands from `backend/`.
+
+From repo root:
+
+```powershell
+cd backend
+```
+
+Then run:
 
 ```powershell
 npm run backup:site
@@ -15,6 +27,8 @@ What this creates:
 - `backups/website-backup-YYYYMMDD-HHMMSS/database-*.sql` (PostgreSQL dump, when available)
 - `backups/website-backup-YYYYMMDD-HHMMSS/database-*.json` (automatic fallback if SQL dump tools are unavailable)
 - `backups/website-backup-YYYYMMDD-HHMMSS/manifest.json` (checksums + metadata)
+
+Note: these paths are relative to `backend/`.
 
 Default behavior:
 - Excludes heavy/dev folders: `node_modules`, `.venv`, `.git`, and previous `backups`

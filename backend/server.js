@@ -70,6 +70,7 @@ const API_RATE_LIMIT_WINDOW_MS =
   parsePositiveInt(process.env.API_RATE_LIMIT_WINDOW_MS, 15 * 60 * 1000);
 const API_RATE_LIMIT_MAX =
   parsePositiveInt(process.env.API_RATE_LIMIT_MAX, IS_PRODUCTION ? 200 : 1000);
+const DB_INIT_RETRY_MS = parsePositiveInt(process.env.DB_INIT_RETRY_MS, 10000);
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
 const RESERVATION_WHATSAPP_NUMBER =
   process.env.RESERVATION_WHATSAPP_NUMBER || '7858062571';
@@ -91,12 +92,19 @@ const WHATSAPP_RESERVATION_TEMPLATE_NAME =
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 const SERVER_STARTED_AT_MS = Date.now();
-const APP_ROOT = path.join(__dirname);
+const FRONTEND_ROOT_FROM_ENV = process.env.FRONTEND_ROOT
+  ? path.resolve(process.env.FRONTEND_ROOT)
+  : '';
+const FRONTEND_ROOT_DEFAULT = path.resolve(__dirname, '..', 'frontend');
+const APP_ROOT = fs.existsSync(FRONTEND_ROOT_FROM_ENV)
+  ? FRONTEND_ROOT_FROM_ENV
+  : fs.existsSync(FRONTEND_ROOT_DEFAULT)
+    ? FRONTEND_ROOT_DEFAULT
+    : path.join(__dirname);
 const ASSETS_ROOT = path.join(APP_ROOT, 'assets');
 const FALLBACK_IMAGE_RELATIVE_PATH = '/assets/images/misc/image-fallback.svg';
 const FALLBACK_IMAGE_ABSOLUTE_PATH = path.join(
-  APP_ROOT,
-  'assets',
+  ASSETS_ROOT,
   'images',
   'misc',
   'image-fallback.svg'
@@ -1489,7 +1497,7 @@ app.get('/dashboard', requireAuth, (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'login.html'));
+  res.sendFile(path.join(APP_ROOT, 'login.html'));
 });
 
 app.use((error, req, res, next) => {
@@ -1512,18 +1520,34 @@ app.use((error, req, res, next) => {
   return res.status(500).json(payload);
 });
 
-initSql()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
-  })
-  .catch((error) => {
-    dbInitError = error?.message || String(error);
-    console.error('PostgreSQL initialization failed:', dbInitError);
-    if (error?.stack) {
-      console.error(error.stack);
-    }
-    console.error('DATABASE_URL:', DATABASE_URL.replace(/:[^:@/]+@/, ':****@'));
-    process.exit(1);
-  });
+function scheduleSqlInitRetry() {
+  setTimeout(() => {
+    initSql()
+      .then(() => {
+        dbInitError = '';
+      })
+      .catch((error) => {
+        dbInitError = error?.message || String(error);
+        console.error('PostgreSQL initialization retry failed:', dbInitError);
+        if (error?.stack) {
+          console.error(error.stack);
+        }
+        scheduleSqlInitRetry();
+      });
+  }, DB_INIT_RETRY_MS);
+}
+
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
+
+initSql().catch((error) => {
+  dbInitError = error?.message || String(error);
+  console.error('PostgreSQL initialization failed:', dbInitError);
+  if (error?.stack) {
+    console.error(error.stack);
+  }
+  console.error('DATABASE_URL:', DATABASE_URL.replace(/:[^:@/]+@/, ':****@'));
+  console.error(`Retrying SQL init every ${DB_INIT_RETRY_MS}ms while keeping server online.`);
+  scheduleSqlInitRetry();
+});

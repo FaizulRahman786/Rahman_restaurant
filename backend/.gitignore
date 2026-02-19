@@ -1,0 +1,11 @@
+node_modules/
+backups/
+.env
+.env.*
+!.env.example
+!.env.production.example
+rahman_backend/
+*.log
+coverage/
+.DS_Store
+Thumbs.db

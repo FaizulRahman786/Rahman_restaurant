@@ -7,7 +7,6 @@ services:
   - type: web
     name: rahman-restaurant
     env: node
-    rootDir: backend
     autoDeploy: true
     healthCheckPath: /api/health
     buildCommand: npm install --omit=dev

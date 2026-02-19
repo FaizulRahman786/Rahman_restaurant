@@ -1,13 +1,25 @@
 # Production Deployment Checklist (RAHMAN)
 
+Related docs:
+- Project root guide: `../README.md`
+- Frontend guide: `../frontend/README.md`
+- Backup guide: `./BACKUP_RECOVERY_GUIDE.md`
+
+Project layout now uses:
+- `frontend/` for static UI files
+- `backend/` for API/server/deployment files
+- `render.yaml` in repository root with `rootDir: backend`
+
 ## 1) Environment
-- Copy `.env.production.example` to `.env` in the host environment.
+- In `backend/`, copy `.env.production.example` to `.env` in the host environment.
 - Set `DATABASE_URL` to your production PostgreSQL database.
 - Set `JWT_SECRET` to a strong value (32+ chars).
 - Set `NODE_ENV=production`.
 - Set `CORS_ORIGIN` to your final domain(s).
 
 ## 2) Install & Start
+- Change to backend directory:
+  - `cd backend`
 - Install dependencies:
   - `npm install --omit=dev`
 - Start the app:
@@ -47,20 +59,22 @@
 - If needed, redeploy previous stable build and restore previous `.env`.
 
 ## 8) Render Deployment (Blueprint)
-- Ensure `render.yaml` is committed in repo root.
+- Ensure `render.yaml` is committed in repository root.
 - Push code to GitHub.
 - In Render dashboard: **New** → **Blueprint** → select repo.
 - Render provisions:
-  - Web service: `rahman-web`
+  - Web service: `rahman-restaurant`
   - PostgreSQL: `rahman-postgres`
+- Confirm service uses root directory:
+  - `backend`
 - After first deploy, verify service environment variables:
   - `NODE_ENV=production`
   - `DATABASE_URL` (linked from managed database)
   - `JWT_SECRET` (auto-generated)
-  - `CORS_ORIGIN` (default: `https://rahman-web.onrender.com`; add custom domain if used)
+  - `CORS_ORIGIN` (set to your live domain, e.g. `https://rahman-restaurant.onrender.com`)
 
 ### Render Post-Deploy Checks
-- Open `https://rahman-web.onrender.com/api/health`
+- Open `https://rahman-restaurant.onrender.com/api/health`
 - Expect `HEALTH_OK=true` and `DB_CONNECTED=true`
 - Open app root and confirm login page loads.
 - Test one reservation flow.
