@@ -4,6 +4,7 @@ const LEGACY_STORAGE_KEY = "rahman_google_user";
 const REDIRECT_AFTER_LOGIN = "index-scroll.html";
 const API_TIMEOUT_MS = 12000;
 const API_RETRY_COUNT = 2;
+const PRODUCTION_API_BASE = "https://rahman-restaurant.onrender.com";
 
 function isNetworkFetchError(error) {
     if (!error) {
@@ -22,7 +23,7 @@ function isNetworkFetchError(error) {
 }
 
 function getFriendlyConnectionMessage() {
-    return "Cannot reach the server right now. Start backend with 'npm start', then open the site from http://localhost:3000 (or allow localhost in backend CORS).";
+    return "Cannot reach the server right now. Please try again in a moment.";
 }
 
 function getFriendlyAuthMessage(error, fallbackMessage) {
@@ -57,11 +58,15 @@ function getApiBaseCandidates() {
     const candidates = [];
 
     if (window.location.protocol === "file:") {
-        candidates.push("http://localhost:3000", "http://127.0.0.1:3000");
+        candidates.push(PRODUCTION_API_BASE, "http://localhost:3000", "http://127.0.0.1:3000");
         return candidates;
     }
 
-    candidates.push(locationOrigin);
+    if (locationOrigin === PRODUCTION_API_BASE) {
+        candidates.push(locationOrigin);
+    } else {
+        candidates.push(PRODUCTION_API_BASE, locationOrigin);
+    }
 
     if (locationOrigin !== "http://localhost:3000") {
         candidates.push("http://localhost:3000");

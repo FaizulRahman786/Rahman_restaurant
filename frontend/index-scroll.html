@@ -1436,6 +1436,7 @@
         var LEGACY_STORAGE_KEY = "rahman_google_user";
         var LOGIN_PAGE = "login.html";
         var LOCAL_API = "http://localhost:3000";
+        var PRODUCTION_API = "https://rahman-restaurant.onrender.com";
         var API_TIMEOUT_MS = 12000;
         var API_RETRY_COUNT = 2;
         var accountTrigger = document.getElementById("accountTrigger");
@@ -1452,11 +1453,10 @@
 
         function getApiBase() {
           var host = window.location.hostname;
-          var origin = window.location.origin;
           if (window.location.protocol === "file:" || !host || host === "localhost" || host === "127.0.0.1") {
             return LOCAL_API;
           }
-          return origin;
+          return PRODUCTION_API;
         }
 
         function getNameInitials(fullName) {
@@ -1576,7 +1576,7 @@
           }
 
           if (isNetworkFetchError(lastError)) {
-            throw new Error("Service is temporarily unreachable. Please ensure backend is running on http://localhost:3000.");
+            throw new Error("Service is temporarily unreachable. Please try again in a moment.");
           }
 
           throw new Error(String((lastError && lastError.message) || "Request failed"));

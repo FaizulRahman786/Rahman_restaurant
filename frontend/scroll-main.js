@@ -1205,11 +1205,11 @@ class ReservationManager {
 
     getApiBase() {
         const host = window.location.hostname;
-        const protocol = window.location.protocol || 'http:';
+        const productionApi = 'https://rahman-restaurant.onrender.com';
         if (!host || host === 'localhost' || host === '127.0.0.1') {
             return 'http://localhost:3000';
         }
-        return `${protocol}//${host}:3000`;
+        return productionApi;
     }
 
     isNetworkFetchError(error) {
@@ -1271,7 +1271,7 @@ class ReservationManager {
         }
 
         if (this.isNetworkFetchError(lastError)) {
-            throw new Error('Reservation service is temporarily unreachable. Please make sure backend is running on http://localhost:3000.');
+            throw new Error('Reservation service is temporarily unreachable. Please try again in a moment.');
         }
 
         throw new Error(lastError?.message || 'Reservation API unavailable');

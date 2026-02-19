@@ -34,7 +34,7 @@ services:
       - key: API_RATE_LIMIT_MAX
         value: 200
       - key: CORS_ORIGIN
-        value: https://rahman-restaurant.onrender.com
+        value: https://rahmanrestaurant.netlify.app,https://rahman-restaurant.onrender.com
       - key: RESERVATION_WHATSAPP_NUMBER
         value: +917858062571
       - key: WHATSAPP_PROVIDER
