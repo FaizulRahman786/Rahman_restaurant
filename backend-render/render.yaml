@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: rahman-restaurant-api
+    env: node
+    rootDir: backend-render
+    autoDeploy: true
+    healthCheckPath: /api/health
+    buildCommand: npm install --omit=dev
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 1h
+      - key: TRUST_PROXY
+        value: 1
+      - key: API_RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: API_RATE_LIMIT_MAX
+        value: 200
+      - key: CORS_ORIGIN
+        sync: false
+      - key: RESERVATION_WHATSAPP_NUMBER
+        value: +917858062571
+      - key: WHATSAPP_PROVIDER
+        value: none
+      - key: WHATSAPP_DEFAULT_COUNTRY_CODE
+        value: 91
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
